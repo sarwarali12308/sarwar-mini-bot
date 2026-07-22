@@ -1,0 +1,1137 @@
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SARWAR-MINI | Pairing Bot</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #0a0a0f;
+      color: white;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .bg-gradient {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 30% 40%, rgba(102, 126, 234, 0.15) 0%, transparent 60%),
+                  radial-gradient(circle at 70% 70%, rgba(118, 75, 162, 0.15) 0%, transparent 60%),
+                  #0a0a0f;
+      z-index: 0;
+    }
+
+    .glow-orb {
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.3;
+      z-index: 1;
+      animation: float 20s infinite ease-in-out;
+    }
+
+    .orb-1 {
+      top: -200px;
+      left: -200px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      bottom: -200px;
+      right: -200px;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      animation-delay: -10s;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translate(0, 0) scale(1);
+      }
+      33% {
+        transform: translate(50px, -50px) scale(1.1);
+      }
+      66% {
+        transform: translate(-50px, 50px) scale(0.9);
+      }
+    }
+
+    .container {
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 480px;
+      background: rgba(20, 20, 30, 0.7);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 30px;
+      padding: 40px 30px;
+      box-shadow: 0 20px 80px rgba(0, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+      animation: slideIn 0.6s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #667eea, #764ba2, transparent);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .logo-container {
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 20px;
+      position: relative;
+    }
+
+    .logo-ring {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 3px solid transparent;
+      border-top-color: #667eea;
+      border-right-color: #764ba2;
+      border-radius: 50%;
+      animation: spin 3s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .logo {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 38px;
+      color: white;
+      box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
+    }
+
+    .title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 400;
+    }
+
+    /* Bot Selector */
+    .bot-selector {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 25px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .bot-btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 12px;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.5);
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .bot-btn i {
+      font-size: 16px;
+    }
+
+    .bot-btn.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .bot-btn:hover:not(.active) {
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+    }
+
+    .bot-btn.sigma.active {
+      background: linear-gradient(135deg, #4A90D9 0%, #2b6bb0 100%);
+      box-shadow: 0 5px 20px rgba(74, 144, 217, 0.3);
+    }
+
+    .server-info {
+      background: rgba(102, 126, 234, 0.1);
+      border: 1px solid rgba(102, 126, 234, 0.3);
+      border-radius: 16px;
+      padding: 15px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .server-info:hover {
+      background: rgba(102, 126, 234, 0.15);
+      border-color: rgba(102, 126, 234, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .server-info-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .server-info-left i {
+      color: #667eea;
+      font-size: 20px;
+    }
+
+    .server-details {
+      flex: 1;
+    }
+
+    .server-name {
+      display: block;
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+
+    .server-stats {
+      display: flex;
+      gap: 15px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .server-stat {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .server-stat i {
+      font-size: 10px;
+    }
+
+    .change-server-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .change-server-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .server-selection {
+      display: none;
+      background: rgba(15, 15, 25, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .server-selection.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .server-selection-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: rgba(255, 255, 255, 0.9);
+      text-align: center;
+    }
+
+    .server-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .server-option {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .server-option:hover {
+      background: rgba(102, 126, 234, 0.1);
+      border-color: rgba(102, 126, 234, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .server-option.selected {
+      background: rgba(102, 126, 234, 0.15);
+      border-color: #667eea;
+    }
+
+    .server-option-name {
+      font-weight: 500;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .server-option-stats {
+      display: flex;
+      gap: 10px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .info-box {
+      background: rgba(102, 126, 234, 0.1);
+      border: 1px solid rgba(102, 126, 234, 0.3);
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .info-box i {
+      color: #667eea;
+      font-size: 20px;
+      margin-top: 2px;
+    }
+
+    .info-box-text {
+      flex: 1;
+    }
+
+    .info-box-text strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 15px;
+    }
+
+    .info-box-text p {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.5;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: 500;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 18px;
+    }
+
+    .input {
+      width: 100%;
+      padding: 16px 20px 16px 55px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      color: white;
+      font-size: 15px;
+      font-family: inherit;
+      transition: all 0.3s ease;
+    }
+
+    .input:focus {
+      outline: none;
+      border-color: #667eea;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    }
+
+    .input::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .hint {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hint i {
+      font-size: 11px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn-generate {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+      margin-bottom: 15px;
+    }
+
+    .btn-generate:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
+    }
+
+    .btn-generate:active:not(:disabled) {
+      transform: translateY(-1px);
+    }
+
+    .btn-generate:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .btn-copy {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      display: none;
+    }
+
+    .btn-copy:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .spinner {
+      width: 45px;
+      height: 45px;
+      border: 4px solid rgba(102, 126, 234, 0.2);
+      border-radius: 50%;
+      border-top-color: #667eea;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 12px;
+    }
+
+    .loading-text {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+    }
+
+    .code-box {
+      background: rgba(0, 0, 0, 0.4);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 15px;
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .code-box.has-code {
+      border-color: rgba(0, 212, 170, 0.5);
+      background: rgba(0, 212, 170, 0.05);
+    }
+
+    .code-box.has-error {
+      border-color: rgba(255, 107, 107, 0.5);
+      background: rgba(255, 107, 107, 0.05);
+    }
+
+    .code-placeholder {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 14px;
+    }
+
+    .code-value {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: #00d4aa;
+      font-family: 'Courier New', monospace;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .code-value i {
+      font-size: 22px;
+    }
+
+    .error-value {
+      color: #ff6b6b;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 25px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .footer-text {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(150px);
+      background: #00d4aa;
+      color: white;
+      padding: 14px 24px;
+      border-radius: 50px;
+      font-weight: 500;
+      box-shadow: 0 10px 40px rgba(0, 212, 170, 0.4);
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      z-index: 1000;
+      opacity: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .toast.error {
+      background: #ff6b6b;
+    }
+
+    @media (max-width: 580px) {
+      .card {
+        padding: 35px 20px;
+        border-radius: 25px;
+      }
+
+      .title {
+        font-size: 26px;
+      }
+
+      .logo-container {
+        width: 80px;
+        height: 80px;
+      }
+
+      .logo {
+        font-size: 34px;
+      }
+
+      .code-value {
+        font-size: 22px;
+      }
+
+      .server-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-gradient"></div>
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+
+  <div class="container">
+    <div class="card">
+      <div class="header">
+        <div class="logo-container">
+          <div class="logo-ring"></div>
+          <div class="logo">
+            <i class="fas fa-bolt"></i>
+          </div>
+        </div>
+        <h1 class="title" id="botTitle">SARWAR-MINI</h1>
+        <p class="subtitle" id="botSubtitle">Generate Your Pairing Code</p>
+      </div>
+
+      <!-- Server Info Section -->
+      <div class="server-info" id="serverInfo">
+        <div class="server-info-left">
+          <i class="fas fa-server"></i>
+          <div class="server-details">
+            <span class="server-name" id="currentServerName">Select Server</span>
+            <div class="server-stats">
+              <span class="server-stat" id="activeCount">
+                <i class="fas fa-circle" style="color: #00d4aa;"></i>
+                Active: --
+              </span>
+              <span class="server-stat" id="serverLimit">
+                <i class="fas fa-users"></i>
+                Limit: --/10
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="change-server-btn">
+          <i class="fas fa-chevron-down"></i>
+          Select
+        </div>
+      </div>
+
+      <!-- Server Selection Section -->
+      <div class="server-selection" id="serverSelection">
+        <div class="server-selection-title">Select a Server</div>
+        <div class="server-grid" id="serverGrid"><div class="server-option " data-server="server1">
+          <div class="server-option-name">
+            Server 1
+          </div>
+          <div class="server-option-stats">
+            <span>Click to select</span>
+          </div>
+        </div><div class="server-option " data-server="server2">
+          <div class="server-option-name">
+            Server 2
+          </div>
+          <div class="server-option-stats">
+            <span>Click to select</span>
+          </div>
+        </div><div class="server-option " data-server="server3">
+          <div class="server-option-name">
+            Server 3
+          </div>
+          <div class="server-option-stats">
+            <span>Click to select</span>
+          </div>
+        </div><div class="server-option " data-server="server4">
+          <div class="server-option-name">
+            Server 4
+          </div>
+          <div class="server-option-stats">
+            <span>Click to select</span>
+          </div>
+        </div><div class="server-option " data-server="server5">
+          <div class="server-option-name">
+            Server 5
+          </div>
+          <div class="server-option-stats">
+            <span>Click to select</span>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="info-box">
+        <i class="fas fa-info-circle"></i>
+        <div class="info-box-text">
+          <strong>Quick Setup</strong>
+          <p>Select a server, enter your WhatsApp number to instantly generate a pairing code. No deployment needed!</p>
+        </div>
+      </div>
+
+      <form id="pairForm">
+        <div class="form-group">
+          <label class="label">WhatsApp Number</label>
+          <div class="input-wrapper">
+            <input type="tel" id="phoneNumber" class="input" placeholder="92342758xxxxx" pattern="[0-9]+" required="">
+            <i class="fas fa-phone input-icon"></i>
+          </div>
+          <div class="hint">
+            <i class="fas fa-lightbulb"></i>
+            Include country code (e.g., 92 for Pakistan)
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-generate" id="generateBtn" disabled="">
+          <i class="fas fa-key"></i>
+          Generate Pair Code
+        </button>
+
+        <div class="loading" id="loading">
+          <div class="spinner"></div>
+          <p class="loading-text">Generating your pair code...</p>
+        </div>
+
+        <div class="code-box" id="codeBox">
+          <div class="code-placeholder">Your pairing code will appear here</div>
+        </div>
+
+        <button type="button" class="btn btn-copy" id="copyBtn">
+          <i class="fas fa-copy"></i>
+          Copy Code
+        </button>
+      </form>
+
+      <div class="footer">
+        <p class="footer-text">
+          © 2026 Powered By SARWAR-MINI
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <span>Code copied successfully</span>
+  </div>
+
+  <script>
+    // ============================================
+    // SARWAR-MINI PAIRING BOT
+    // 5 SERVERS, 10 USERS MAX PER SERVER
+    // 30 SECOND COOLDOWN
+    // ============================================
+
+    // Pairing API config
+    const API_BASE = 'https://sarwar-mini-bot-e3d249c3a58c.herokuapp.com/api/pair';
+    const API_KEY = 'V';
+    const SERVER_USER_LIMIT = 10;
+
+    // DOM Elements
+    const phoneInput = document.getElementById('phoneNumber');
+    const generateBtn = document.getElementById('generateBtn');
+    const loading = document.getElementById('loading');
+    const codeBox = document.getElementById('codeBox');
+    const copyBtn = document.getElementById('copyBtn');
+    const toast = document.getElementById('toast');
+    const form = document.getElementById('pairForm');
+    const serverInfo = document.getElementById('serverInfo');
+    const serverSelection = document.getElementById('serverSelection');
+    const serverGrid = document.getElementById('serverGrid');
+    const currentServerName = document.getElementById('currentServerName');
+    const activeCount = document.getElementById('activeCount');
+    const serverLimit = document.getElementById('serverLimit');
+
+    let currentCode = null;
+    let selectedServer = null;
+    let cooldownTimer = null;
+    let cooldownSeconds = 0;
+
+    // 5 SERVERS ONLY, 10 USERS MAX EACH
+    const allServers = [
+      { id: 'server1', name: 'Server 1' },
+      { id: 'server2', name: 'Server 2' },
+      { id: 'server3', name: 'Server 3' },
+      { id: 'server4', name: 'Server 4' },
+      { id: 'server5', name: 'Server 5' }
+    ];
+
+    // ============================================
+    // LOCAL USAGE TRACKING (client-side, per-browser)
+    // NOTE: the pairing API itself has no "how many
+    // people are on this server" endpoint, so this
+    // count is tracked locally to enforce the 10/server
+    // cap on this device. For a real global cap across
+    // all visitors you'd need a small backend/database.
+    // ============================================
+    function getServerCount(serverId) {
+      const raw = localStorage.getItem('sarwarmini_' + serverId);
+      return raw ? parseInt(raw, 10) : 0;
+    }
+
+    function incrementServerCount(serverId) {
+      const count = getServerCount(serverId) + 1;
+      localStorage.setItem('sarwarmini_' + serverId, String(count));
+      return count;
+    }
+
+    // ============================================
+    // PAIRING API
+    // ============================================
+    async function _generateCode(serverId, number) {
+      const url = `${API_BASE}?number=${encodeURIComponent(number)}&apiKey=${encodeURIComponent(API_KEY)}`;
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error('Server error, please try another server');
+      }
+
+      const result = await response.json();
+
+      // Try the common shapes a pairing API might return the code in
+      const code = result.code || result.pairCode || result.pairingCode || result.c || result.data;
+
+      if (!code) {
+        throw new Error(result.message || result.error || 'Failed to generate code');
+      }
+
+      return code;
+    }
+
+    // Toast notification
+    function showToast(message, isError = false) {
+      const toastIcon = toast.querySelector('i');
+      const toastText = toast.querySelector('span');
+
+      toastIcon.className = isError ? 'fas fa-exclamation-circle' : 'fas fa-check-circle';
+      toastText.textContent = message;
+      toast.className = `toast ${isError ? 'error' : ''} show`;
+
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // Initialize the app
+    function initApp() {
+      populateServerGrid(allServers);
+      serverInfo.addEventListener('click', showServerSelection);
+    }
+
+    function populateServerGrid(servers) {
+      serverGrid.innerHTML = '';
+
+      servers.forEach(server => {
+        const isSelected = selectedServer === server.id;
+        const count = getServerCount(server.id);
+        const isFull = count >= SERVER_USER_LIMIT;
+
+        const serverOption = document.createElement('div');
+        serverOption.className = `server-option ${isSelected ? 'selected' : ''}`;
+        serverOption.dataset.server = server.id;
+
+        serverOption.innerHTML = `
+          <div class="server-option-name">
+            ${server.name}
+          </div>
+          <div class="server-option-stats">
+            <span>${isFull ? 'Full' : `${count}/${SERVER_USER_LIMIT} · Click to select`}</span>
+          </div>
+        `;
+
+        if (!isFull) {
+          serverOption.addEventListener('click', () => selectServer(server.id));
+        } else {
+          serverOption.style.opacity = '0.5';
+          serverOption.style.cursor = 'not-allowed';
+        }
+
+        serverGrid.appendChild(serverOption);
+      });
+    }
+
+    async function selectServer(serverId) {
+      selectedServer = serverId;
+
+      const serverNum = serverId.replace('server', '');
+      currentServerName.textContent = `Server ${serverNum}`;
+
+      updateServerStatus(serverId);
+      hideServerSelection();
+    }
+
+    function updateServerStatus(serverId) {
+      const serverNum = serverId.replace('server', '');
+      currentServerName.textContent = `Server ${serverNum}`;
+
+      const count = getServerCount(serverId);
+
+      if (count >= SERVER_USER_LIMIT) {
+        activeCount.innerHTML = `<i class="fas fa-circle" style="color:#ffa500;"></i> Status: FULL`;
+        serverLimit.innerHTML = `<i class="fas fa-users"></i> ${count}/${SERVER_USER_LIMIT}`;
+        generateBtn.disabled = true;
+        showErrorInCode(`Server ${serverNum} is full! Please select another server.`);
+        showToast(`Server ${serverNum} is full`, true);
+      } else {
+        activeCount.innerHTML = `<i class="fas fa-circle" style="color:#00d4aa;"></i> Active: ${count}`;
+        serverLimit.innerHTML = `<i class="fas fa-users"></i> Limit: ${count}/${SERVER_USER_LIMIT}`;
+        if (!cooldownTimer) {
+          generateBtn.disabled = false;
+        }
+        if (codeBox.classList.contains('has-error')) {
+          resetCodeBox();
+        }
+      }
+
+      populateServerGrid(allServers);
+    }
+
+    function showErrorInCode(message) {
+      codeBox.className = 'code-box has-error';
+      codeBox.innerHTML = `
+        <div class="error-value">
+          <i class="fas fa-exclamation-circle"></i>
+          <span>${message}</span>
+        </div>
+      `;
+      copyBtn.style.display = 'none';
+      currentCode = null;
+    }
+
+    function showCode(code) {
+      currentCode = code;
+      codeBox.className = 'code-box has-code';
+      codeBox.innerHTML = `
+        <div class="code-value">
+          <i class="fas fa-check-circle"></i>
+          <span>${code}</span>
+        </div>
+      `;
+      copyBtn.style.display = 'flex';
+    }
+
+    function resetCodeBox() {
+      codeBox.className = 'code-box';
+      codeBox.innerHTML = '<div class="code-placeholder">Your pairing code will appear here</div>';
+      copyBtn.style.display = 'none';
+      currentCode = null;
+    }
+
+    function showServerSelection() {
+      serverInfo.style.display = 'none';
+      serverSelection.style.display = 'block';
+      serverSelection.classList.add('show');
+      populateServerGrid(allServers);
+    }
+
+    function hideServerSelection() {
+      serverInfo.style.display = 'flex';
+      serverSelection.style.display = 'none';
+      serverSelection.classList.remove('show');
+    }
+
+    function validatePhone(number) {
+      const cleaned = number.replace(/[^\d]/g, '');
+      return cleaned.length >= 10 && cleaned.length <= 15;
+    }
+
+    // 30 SECOND COOLDOWN
+    function startCooldown() {
+      if (cooldownTimer) return;
+      cooldownSeconds = 30;
+      generateBtn.disabled = true;
+      generateBtn.innerHTML = `<i class="fas fa-hourglass-half"></i> Wait ${cooldownSeconds}s`;
+
+      cooldownTimer = setInterval(() => {
+        cooldownSeconds--;
+        if (cooldownSeconds <= 0) {
+          clearInterval(cooldownTimer);
+          cooldownTimer = null;
+          generateBtn.disabled = false;
+          generateBtn.innerHTML = `<i class="fas fa-key"></i> Generate Pair Code`;
+          if (selectedServer) {
+            updateServerStatus(selectedServer);
+          }
+        } else {
+          generateBtn.innerHTML = `<i class="fas fa-hourglass-half"></i> Wait ${cooldownSeconds}s`;
+        }
+      }, 1000);
+    }
+
+    async function generatePairCode(e) {
+      e.preventDefault();
+
+      if (!selectedServer) {
+        showErrorInCode('Please select a server first');
+        showToast('Please select a server first', true);
+        showServerSelection();
+        return;
+      }
+
+      if (getServerCount(selectedServer) >= SERVER_USER_LIMIT) {
+        showErrorInCode('This server is full. Please select another server.');
+        showToast('Server is full', true);
+        return;
+      }
+
+      const phoneNumber = phoneInput.value.trim();
+
+      if (!phoneNumber) {
+        showErrorInCode('Please enter your WhatsApp number');
+        showToast('Phone number is required', true);
+        return;
+      }
+
+      if (!validatePhone(phoneNumber)) {
+        showErrorInCode('Please enter a valid phone number (10-15 digits)');
+        showToast('Invalid phone number format', true);
+        return;
+      }
+
+      generateBtn.style.display = 'none';
+      loading.style.display = 'block';
+      resetCodeBox();
+
+      try {
+        const code = await _generateCode(selectedServer, phoneNumber.replace(/[^\d]/g, ''));
+
+        if (code) {
+          showCode(code);
+          showToast('Pair code generated successfully!');
+          incrementServerCount(selectedServer);
+          updateServerStatus(selectedServer);
+          startCooldown();
+        } else {
+          throw new Error('Failed to generate code');
+        }
+
+      } catch (error) {
+        console.error('Error:', error);
+        let errorMsg = error.message || 'Failed to generate code';
+        showErrorInCode(errorMsg);
+        showToast(errorMsg, true);
+
+      } finally {
+        generateBtn.style.display = 'flex';
+        loading.style.display = 'none';
+      }
+    }
+
+    async function copyCode() {
+      if (!currentCode) return;
+
+      try {
+        await navigator.clipboard.writeText(currentCode);
+
+        const originalHTML = copyBtn.innerHTML;
+        copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        copyBtn.disabled = true;
+        copyBtn.style.opacity = '0.7';
+
+        showToast('Code copied to clipboard!');
+
+        setTimeout(() => {
+          copyBtn.innerHTML = originalHTML;
+          copyBtn.disabled = false;
+          copyBtn.style.opacity = '1';
+        }, 2000);
+
+      } catch (error) {
+        showToast('Failed to copy code', true);
+      }
+    }
+
+    // Event Listeners
+    form.addEventListener('submit', generatePairCode);
+    copyBtn.addEventListener('click', copyCode);
+
+    phoneInput.addEventListener('input', (e) => {
+      e.target.value = e.target.value.replace(/[^\d]/g, '');
+    });
+
+    phoneInput.addEventListener('focus', () => {
+      if (codeBox.classList.contains('has-error')) {
+        resetCodeBox();
+      }
+    });
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', initApp);
+  </script>
+
+
+
+</body></html>
